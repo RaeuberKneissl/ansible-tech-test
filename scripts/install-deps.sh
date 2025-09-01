@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Install Ansible dependencies
+# Install dependencies
 # Usage: ./install-deps.sh
 
 set -e
@@ -8,10 +8,22 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ANSIBLE_DIR="$(dirname "$SCRIPT_DIR")"
 
-echo "Installing Ansible Galaxy dependencies..."
+echo "Installing dependencies..."
 echo "========================================"
 
 cd "$ANSIBLE_DIR"
+
+# Install ansible
+if [[ -f "requirements.txt" ]]; then
+    echo "Installing from requirements.txt..."
+
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip3 install -r requirements.txt
+else
+    echo "Error: requirements.txt not found in $ANSIBLE_DIR"
+    exit 1
+fi
 
 # Install collections and roles
 if [[ -f "requirements.yml" ]]; then

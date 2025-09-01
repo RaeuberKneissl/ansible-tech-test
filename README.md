@@ -6,8 +6,9 @@ A complete Ansible repository for deploying and managing nginx web servers acros
 
 ```
 .
-├── ansible.cfg                 # Ansible configuration
-├── requirements.yml            # External roles and collections
+├── ansible.cfg                # Ansible configuration
+├── requirements.yml           # External roles and collections
+├── requirements.txt           # Ansible
 ├── inventories/               # Environment-specific inventories
 │   ├── production/
 │   │   ├── hosts.yml          # Production inventory
@@ -30,16 +31,6 @@ A complete Ansible repository for deploying and managing nginx web servers acros
    ./scripts/install-deps.sh
    ```
 
-2. **Deploy to UAT environment:**
-   ```bash
-   ./scripts/deploy.sh --environment uat
-   ```
-
-3. **Deploy to production environment:**
-   ```bash
-   ./scripts/deploy.sh --environment production
-   ```
-
 ## Environments
 
 ### UAT Environment
@@ -56,25 +47,6 @@ A complete Ansible repository for deploying and managing nginx web servers acros
 
 ## Usage Examples
 
-### Basic Deployment
-```bash
-# Deploy to UAT
-./scripts/deploy.sh -e uat
-
-# Deploy to production
-./scripts/deploy.sh -e production
-```
-
-### Targeted Deployment with Tags
-```bash
-# Only run nginx configuration tasks
-./scripts/deploy.sh -e uat -t nginx
-
-# Only update packages
-./scripts/deploy.sh -e production -t packages
-```
-
-### Manual Ansible Commands
 ```bash
 # Deploy to UAT
 ansible-playbook -i inventories/uat/hosts.yml deploy-nginx.yml
