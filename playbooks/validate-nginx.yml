@@ -1,0 +1,70 @@
+---
+- name: Validate nginx deployment
+  hosts: nginx_servers
+  become: yes
+  gather_facts: yes
+  
+  tasks:
+    - name: Check if nginx is installed
+      package_facts:
+        manager: auto
+      tags: validation
+
+    - name: Verify nginx package is installed
+      assert:
+        that:
+          - "'nginx' in ansible_facts.packages"
+        fail_msg: "Nginx is not installed"
+        success_msg: "Nginx is installed"
+      tags: validation
+
+    - name: Check nginx service status
+      service_facts:
+      tags: validation
+
+    - name: Verify nginx service is running
+      assert:
+        that:
+          - "ansible_facts.services['nginx.service'].state == 'running'"
+          - "ansible_facts.services['nginx.service'].status == 'enabled'"
+        fail_msg: "Nginx service is not running or not enabled"
+        success_msg: "Nginx service is running and enabled"
+      tags: validation
+
+    - name: Test nginx configuration syntax
+      command: nginx -t
+      register: nginx_syntax_check
+      changed_when: false
+      tags: validation
+
+    - name: Verify nginx configuration is valid
+      assert:
+        that:
+          - "nginx_syntax_check.rc == 0"
+        fail_msg: "Nginx configuration syntax is invalid"
+        success_msg: "Nginx configuration syntax is valid"
+      tags: validation
+
+    - name: Check nginx is listening on port 80
+      wait_for:
+        port: 80
+        host: "{{ ansible_default_ipv4.address }}"
+        timeout: 10
+      tags: validation
+
+    - name: Test HTTP response
+      uri:
+        url: "http://{{ ansible_default_ipv4.address }}/"
+        method: GET
+        status_code: [200, 403, 404]  # Accept common valid responses
+      register: http_response
+      tags: validation
+
+    - name: Display validation results
+      debug:
+        msg:
+          - "Environment: {{ environment }}"
+          - "Nginx version: {{ ansible_facts.packages.nginx[0].version if 'nginx' in ansible_facts.packages else 'Not found' }}"
+          - "Service status: {{ ansible_facts.services['nginx.service'].state }}"
+          - "HTTP response code: {{ http_response.status }}"
+      tags: validation

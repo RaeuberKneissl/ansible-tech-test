@@ -1,0 +1,36 @@
+---
+- name: Deploy nginx to specific environment
+  hosts: nginx_servers
+  become: yes
+  gather_facts: yes
+  
+  tasks:
+    - name: Display environment information
+      debug:
+        msg: "Deploying to {{ environment }} environment"
+      tags: info
+
+    - name: Update package cache (Ubuntu/Debian)
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      when: ansible_os_family == "Debian"
+      tags: packages
+
+    - name: Update package cache (CentOS/RHEL)
+      yum:
+        update_cache: yes
+      when: ansible_os_family == "RedHat"
+      tags: packages
+
+    - name: Include nginx role
+      include_role:
+        name: nginxinc.nginx
+      tags: nginx
+
+    - name: Ensure nginx is started and enabled
+      systemd:
+        name: nginx
+        state: started
+        enabled: yes
+      tags: nginx
