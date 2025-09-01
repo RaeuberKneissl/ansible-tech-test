@@ -11,7 +11,7 @@ ANSIBLE_DIR="$(dirname "$SCRIPT_DIR")"
 # Default values
 ENVIRONMENT="production"
 TAGS=""
-PLAYBOOK="site.yml"
+PLAYBOOK="playbooks/deploy-nginx.yml"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
