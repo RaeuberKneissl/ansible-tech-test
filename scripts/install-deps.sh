@@ -1,4 +1,4 @@
-#!/bin/zsh -i
+#!/bin/zsh
 
 # Install dependencies
 # Usage: ./install-deps.sh
@@ -25,14 +25,13 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     if ! brew ls --versions direnv > /dev/null; then
         echo "Installing direnv..."
         brew install direnv
+
         if ! grep -q 'eval "$(direnv hook zsh)"' ~/.zshrc; then
             echo "Adding direnv hook to .zshrc"
             echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
         fi
         source ~/.zshrc
     fi
-
-    direnv allow > /dev/null
 fi
 
 # Install ansible
@@ -46,6 +45,9 @@ fi
 
 # Install collections and roles
 if [[ -f "requirements.yml" ]]; then
+    direnv allow
+    eval "$(direnv export zsh)"
+
     echo "Installing from requirements.yml..."
     ansible-galaxy install -r requirements.yml --force
     echo ""
