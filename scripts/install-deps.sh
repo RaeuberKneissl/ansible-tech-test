@@ -18,12 +18,15 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     if ! command -v brew >/dev/null 2>&1; then
         echo "Installing Homebrew..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        brew analytics off
     fi
 
     # Check for direnv and install if we don't have it
     if ! brew ls --versions direnv > /dev/null; then
         echo "Installing direnv..."
         brew install direnv
+        echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
+        source ~/.zshrc
     fi
 
     direnv allow
