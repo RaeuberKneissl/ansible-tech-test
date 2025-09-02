@@ -34,3 +34,8 @@
         state: started
         enabled: yes
       tags: nginx
+
+    - name: Include nginx config role
+      include_role:
+        name: nginxinc.nginx_config
+      tags: nginx-config

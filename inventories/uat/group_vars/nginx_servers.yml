@@ -1,2 +1,8 @@
 ---
 # UAT-specific nginx configuration
+
+nginx_config_upload_html_enable: true
+nginx_config_upload_html:
+  - src: ../inventories/uat/files/nginx/www/index.html
+    dest: /usr/share/nginx/html/index.html
+    backup: true
