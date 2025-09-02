@@ -5,7 +5,7 @@
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${(%):-%N}")" && pwd)"
 ANSIBLE_DIR="$(dirname "$SCRIPT_DIR")"
 
 echo "Installing dependencies..."
@@ -25,11 +25,14 @@ if [[ $OSTYPE == 'darwin'* ]]; then
     if ! brew ls --versions direnv > /dev/null; then
         echo "Installing direnv..."
         brew install direnv
-        echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
+        if ! grep -q 'eval "$(direnv hook zsh)"' ~/.zshrc; then
+            echo "Adding direnv hook to .zshrc"
+            echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
+        fi
         source ~/.zshrc
     fi
 
-    direnv allow
+    direnv allow > /dev/null
 fi
 
 # Install ansible
