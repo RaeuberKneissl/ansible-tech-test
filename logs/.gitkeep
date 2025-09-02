@@ -1,0 +1,2 @@
+# Log directory for Ansible
+# Logs will be automatically created here during playbook execution
