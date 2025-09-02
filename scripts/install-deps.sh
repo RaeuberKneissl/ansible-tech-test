@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Install dependencies
 # Usage: ./install-deps.sh
