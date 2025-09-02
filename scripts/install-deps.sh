@@ -13,12 +13,25 @@ echo "========================================"
 
 cd "$ANSIBLE_DIR"
 
+if [[ $OSTYPE == 'darwin'* ]]; then
+    # Check for Homebrew and install if we don't have it
+    if ! command -v brew >/dev/null 2>&1; then
+        echo "Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+
+    # Check for direnv and install if we don't have it
+    if ! brew ls --versions direnv > /dev/null; then
+        echo "Installing direnv..."
+        brew install direnv
+    fi
+
+    direnv allow
+fi
+
 # Install ansible
 if [[ -f "requirements.txt" ]]; then
     echo "Installing from requirements.txt..."
-
-    python3 -m venv .venv
-    source .venv/bin/activate
     pip3 install -r requirements.txt
 else
     echo "Error: requirements.txt not found in $ANSIBLE_DIR"
