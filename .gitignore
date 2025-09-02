@@ -39,3 +39,6 @@ temp/
 
 # Python virtual env
 .venv/
+
+# Direnv
+.direnv
